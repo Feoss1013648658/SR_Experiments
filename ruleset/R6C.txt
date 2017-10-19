@@ -1,0 +1,39 @@
+
+#input ssn_observedBy/2, sao_hasValue/2, ssn_observedProperty/2, rdf_type/2.
+
+#prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+#prefix :   <http://www.insight-centre.org/dataset/SampleEventService#>.
+#prefix ssn : <http://purl.oclc.org/NET/ssnx/ssn#>.
+#prefix sao:     <http://purl.oclc.org/NET/sao/>.
+#prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#>. 
+#prefix ct:      <http://www.insight-centre.org/citytraffic#>.
+
+
+#from stream <http://www.insight-centre.org/dataset/SampleEventService#AarhusParkingDataKALKVAERKSVEJ> [TIME 3s STEP 1s] 
+#from stream <http://www.insight-centre.org/dataset/SampleEventService#UserLocationService> [TIME 5s STEP 4s]
+#from <dataset/SensorRepository.lp>
+
+
+typeLocation(P, Lat, Lon):- rdf_type(P,"ct_ParkingVacancy"), ssn_isPropertyOf(P,Foi), ct_hasStartLatitude(Foi, Lat), ct_hasStartLongitude(Foi,Lon).
+
+observedProperty(ObId, P):- sao_hasValue(ObId, V), ssn_observedProperty(ObId, P), ssn_observedBy(ObId, "_AarhusParkingDataKALKVAERKSVEJ").
+
+hasValue(ObId, Lat, Lon):- rdf_type(ObId, Ob), observedProperty(ObId, P), typeLocation(P, Lat, Lon).
+
+
+hasLocation(V, Lat, Lon) :-  ct_hasLatitude(V,Lat), ct_hasLongitude(V, Lon).
+
+hasValue(ObId,Lat, Lon):- rdf_type(ObId,Ob), sao_hasValue(ObId, V),hasLocation(V, Lat, Lon), ssn_observedBy(ObId, "_UserLocationService").
+
+selected(ObId1, ObId2):- hasValue(ObId1,Lat1, Lon1), hasValue(ObId2,Lat2, Lon2).
+
+hasLat(ObId, Lat):- hasValue(ObId,Lat, Lon), selected(ObId,_).
+hasLon(ObId, Lon):- hasValue(ObId,Lat, Lon), selected(ObId,_).
+
+hasLat(ObId, Lat):- hasValue(ObId,Lat, Lon), selected(_,ObId).
+hasLon(ObId, Lon):- hasValue(ObId,Lat, Lon), selected(_,ObId).
+
+
+#show hasLat/2.
+#show hasLon/2. 
+

@@ -1,0 +1,52 @@
+#input rdf_type/2.
+#input uniben_worksFor/2.
+#input uniben_subOrganizationOf/2.
+#input uniben_teacherOf/2.
+#input uniben_teachingAssistantOf/2.
+#input uniben_takesCourse/2.
+#input uniben_publicationAuthor/2.
+#input uniben_advisor/2.
+
+
+#prefix rdf : <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+#prefix uniben : <http://www.lehigh.edu/~zhp2/2004/0401/univ-bench.owl#>.
+		
+#from stream <http://lubm.org#Universities-1> [COUNT 60000 STEP 60000]
+
+
+rdf_type(X,"Profesor") :- rdf_type(X, "uniben_FullProfessor").
+rdf_type(X,"Profesor") :- rdf_type(X, "uniben_AssociateProfessor").
+rdf_type(X,"Profesor") :- rdf_type(X, "uniben_AssistantProfessor").
+
+canBecomeDean(X,U) :- rdf_type(X,"Professor"), uniben_worksFor(X,D), uniben_subOrganizationOf(D,U).
+canBecomeHeadOf(X,D) :- uniben_worksFor(X,D).
+
+
+commonResearchInterests(X,Y):- uniben_researchInterest(X,R), uniben_researchInterest(Y,R).
+
+commonPulication(X,Y):- uniben_publicationAuthor(P,X), uniben_publicationAuthor(P,Y).
+commonResearchInterests(X,Y) :- commonPulication(X,Y).
+
+uniben_teacherOf(Y,C):- commonResearchInterests(X,Y), uniben_teacherOf(X,C).
+
+
+commonResearchInterests(X,Y):- uniben_advisor(X,Z), uniben_advisor(Y,Z).
+
+canRequestRecommendationLetter(X,Z) :- uniben_advisor(X,Z).
+canRequestRecommendationLetter(X,Z) :- teaches(Z,X).
+
+teaches(X,Y):- uniben_teacherOf(X,C), uniben_takesCourse(Y,C).
+teaches(X,Y):- uniben_teachingAssistantOf(X,C), uniben_takesCourse(Y,C).
+suggestAdvisor(X,Y):- teaches(Y,X).
+
+
+#show canBecomeDean/2.
+#show canBecomeHeadOf/2.
+#show commonResearchInterests/2.
+#show canRequestRecommendationLetter/2.
+#show teaches/2.
+#show suggestAdvisor/2.
+
+
+
+

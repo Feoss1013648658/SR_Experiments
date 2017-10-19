@@ -1,0 +1,23 @@
+construct {?obId1 <http://purl.oclc.org/NET/sao/hasValue> ?v1. 
+?obId2 <http://purl.oclc.org/NET/sao/hasValue> ?v2.
+}
+
+from  stream <http://www.insight-centre.org/dataset/SampleEventService#AarhusPollutionData201399> [range 5s step 3s] 
+from  stream <http://www.insight-centre.org/dataset/SampleEventService#AarhusPollutionData184892> [range 3s step 2s]
+from <http://localhost:8080/SensorRepository.rdf>  
+
+where {
+
+
+{?obId1 a ?ob.
+?obId1 <http://purl.oclc.org/NET/ssnx/ssn#observedProperty> ?p1.
+?obId1 <http://purl.oclc.org/NET/sao/hasValue> ?v1.
+?obId1 <http://purl.oclc.org/NET/ssnx/ssn#observedBy> <http://www.insight-centre.org/dataset/SampleEventService#AarhusPollutionData201399>.
+}
+
+{?obId2 a ?ob.
+?obId2 <http://purl.oclc.org/NET/ssnx/ssn#observedProperty> ?p2.
+?obId2 <http://purl.oclc.org/NET/sao/hasValue> ?v2.
+?obId2 <http://purl.oclc.org/NET/ssnx/ssn#observedBy> <http://www.insight-centre.org/dataset/SampleEventService#AarhusPollutionData184892>.
+}}
+

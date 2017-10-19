@@ -1,0 +1,30 @@
+
+#input ssn_observedBy/2, sao_hasValue/2, ssn_observedProperty/2, rdf_type/2.
+
+#prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+#prefix :   <http://www.insight-centre.org/dataset/SampleEventService#>.
+#prefix ssn : <http://purl.oclc.org/NET/ssnx/ssn#>.
+#prefix sao:     <http://purl.oclc.org/NET/sao/>.
+#prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#>. 
+#prefix ct:      <http://www.insight-centre.org/citytraffic#>.
+
+#from stream <http://www.insight-centre.org/dataset/SampleEventService#AarhusWeatherData0> [TIME 3s STEP 1s] 
+#from stream <http://www.insight-centre.org/dataset/SampleEventService#AarhusTrafficData158505> [TIME 5000ms STEP 4s]
+#from <dataset/SensorRepository.lp>
+
+type(P) :- rdf_type(P, "ct_Temperature").
+type(P) :- rdf_type(P, "ct_Humidity").
+type(P) :- rdf_type(P, "ct_WindSpeed").
+
+
+ 
+ 
+observerBy(ObId,"weather"):- ssn_observedBy(ObId, "_AarhusWeatherData0"). 
+observerBy(ObId,"traffic"):- ssn_observedBy(ObId, "_AarhusTrafficData158505").
+
+
+
+result(ObId, V):- observerBy(ObId,"traffic"), sao_hasValue(ObId, V), ssn_observedProperty(ObId, P), rdf_type(P, "ct_CongestionLevel").
+result(ObId, V):- observerBy(ObId,"weather"), sao_hasValue(ObId, V), ssn_observedProperty(ObId, P),type(P).
+
+#show result/2. 

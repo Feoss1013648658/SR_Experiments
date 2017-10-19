@@ -1,0 +1,12 @@
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix demo: <http://example.com/demo#> .
+
+demo:Person a owl:Class.
+demo:hasAncestor rdfs:range demo:Person ; rdfs:domain demo:Person .
+demo:parentOf rdfs:subPropertyOf demo:ancestorOf ; owl:inverseOf demo:childOf .
+
+demo:ancestorOf owl:inverseOf demo:hasAncestor ; a owl:TransitiveProperty .
+demo:Trilby demo:parentOf demo:MarkB .
+demo:Mark demo:parentOf demo:Elizabeth .
+demo:MarkB owl:sameAs demo:Mark .

@@ -1,0 +1,28 @@
+
+
+#input ssn_observedBy/2, sao_hasValue/2, ssn_observedProperty/2, rdf_type/2.
+
+#prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+#prefix :   <http://www.insight-centre.org/dataset/SampleEventService#>.
+#prefix ssn : <http://purl.oclc.org/NET/ssnx/ssn#>.
+#prefix sao:     <http://purl.oclc.org/NET/sao/>.
+#prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#>. 
+#prefix ct:      <http://www.insight-centre.org/citytraffic#>.
+
+
+#from  stream <http://www.insight-centre.org/dataset/SampleEventService#AarhusPollutionData201399> [TIME 5s STEP 3s] 
+#from  stream <http://www.insight-centre.org/dataset/SampleEventService#AarhusPollutionData184892> [TIME 3s STEP 2s] 
+
+#from <dataset/SensorRepository.lp>
+
+observed(ObId) :- ssn_observedBy(ObId, "_AarhusPollutionData201399").
+observed(ObId) :- ssn_observedBy(ObId, "_AarhusPollutionData184892").
+
+observedValue(ObId, V, Ob):- rdf_type(ObId,Ob), sao_hasValue(ObId, V), ssn_observedProperty(ObId, P), observed(ObId).
+
+result_observed(ObId1,V1,ObId2,V2) :- observedValue(ObId1,V1, Ob), observedValue(ObId2, V2, Ob).
+
+result(ObId1, V1):- result_observed(ObId1,V1,_,_).
+result(ObId2, V2):- result_observed(_,_,ObId2,V2).
+
+#show result/2. 

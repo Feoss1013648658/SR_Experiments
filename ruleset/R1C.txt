@@ -1,0 +1,18 @@
+#input ssn_observedBy/2, sao_hasValue/2, ssn_observedProperty/2, rdf_type/2.
+
+#prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+#prefix :   <http://www.insight-centre.org/dataset/SampleEventService#>.
+#prefix ssn : <http://purl.oclc.org/NET/ssnx/ssn#>.
+#prefix sao:     <http://purl.oclc.org/NET/sao/>.
+#prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#>. 
+#prefix ct:      <http://www.insight-centre.org/citytraffic#>.
+
+#from stream <http://www.insight-centre.org/dataset/SampleEventService#AarhusTrafficData182955> [TIME 3s STEP 1s]
+#from stream <http://www.insight-centre.org/dataset/SampleEventService#AarhusTrafficData158505> [TIME 5s STEP 4s]
+#from <dataset/SensorRepository.lp>
+
+observerBy(ObId):- ssn_observedBy(ObId, "_AarhusTrafficData182955"). 
+observerBy(ObId):- ssn_observedBy(ObId, "_AarhusTrafficData158505").
+result(ObId, V):- observerBy(ObId), sao_hasValue(ObId, V), ssn_observedProperty(ObId, P), rdf_type(P, "ct_CongestionLevel").
+
+#show result/2. 

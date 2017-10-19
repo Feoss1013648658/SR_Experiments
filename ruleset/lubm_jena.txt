@@ -1,0 +1,29 @@
+
+@prefix uniben: <http://www.lehigh.edu/~zhp2/2004/0401/univ-bench.owl#>.
+@prefix lubm: <http://lubm_example.org#>.
+
+[rule1: (?x rdf:type uniben:FullProfessor) -> (?x rdf:type uniben:Professor)]
+[rule2: (?x rdf:type uniben:AssociateProfessor) -> (?x rdf:type lubm:Professor)]
+[rule3: (?x rdf:type uniben:AssociateProfessor) -> (?x rdf:type lubm:Professor)]
+
+[rule4: (?x rdf:type uniben:AssociateProfessor) (?x uniben:worksFor ?d) (?d  uniben:subOrganizationOf ?u) -> (?x lubm:canBecomeDean ?d)]
+[rule5: (?x uniben:worksFor ?d) -> (?x lubm:canBecomeHeadOf ?d)]
+
+[rule6: (?x uniben:researchInterest ?r) (?y uniben:researchInterest ?r) -> (?x lubm:commonResearchInterests ?y)]
+
+[rule7: (?x uniben:publicationAuthor ?p) (?y uniben:publicationAuthor ?p) -> (?x lubm:commonPulication ?y)]
+[rule8: (?x lubm:commonPulication ?y) -> (?x lubm:commonResearchInterests ?y)]
+
+[rule9: (?x lubm:commonResearchInterests ?y) (?x uniben:teacherOf ?c) -> (?y uniben:teacherOf ?c)]
+
+[rule10: (?x uniben:advisor ?z) (?y uniben:advisor ?z) -> (?x lubm:commonResearchInterests ?y)]
+
+[rule11: (?x uniben:advisor ?z)-> (?x lubm:canRequestRecommendationLetter ?z)]
+
+[rule12: (?x uniben:teacherOf ?c) (?y uniben:takesCourse ?c)-> (?x lubm:teaches ?y)]
+
+[rule13: (?x uniben:teachingAssistantOf ?c) (?y uniben:takesCourse ?c)-> (?x lubm:teaches ?y)]
+
+
+[rule14: (?x lubm:teaches ?z)-> (?x lubm:canRequestRecommendationLetter ?z)]
+[rule15: (?x lubm:teaches ?z)-> (?x lubm:suggestAdvisor ?z)]
